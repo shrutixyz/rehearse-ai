@@ -1,0 +1,25 @@
+{
+    "qualities": [
+      {
+        "name": "Friendliness Level",
+        "description": "The degree to which the interviewer's tone and demeanor are friendly and welcoming. Options may include: High, Medium, Low."
+      },
+      {
+        "name": "Technical Proficiency",
+        "description": "The level of technical knowledge and expertise possessed by the interviewer. Options may include: High, Medium, Low."
+      },
+      {
+        "name": "Professionalism Rating",
+        "description": "The extent to which the interviewer adheres to professional standards and conducts the interview in a formal manner. Options may include: High, Medium, Low."
+      },
+      {
+        "name": "Empathy Level",
+        "description": "The degree to which the interviewer demonstrates understanding and compassion towards the interviewee's experiences and challenges. Options may include: High, Medium, Low."
+      },
+      {
+        "name": "Feedback Provision Skill",
+        "description": "The proficiency of the interviewer in providing constructive feedback to the interviewee, helping them understand areas for improvement. Options may include: High, Medium, Low."
+      }
+    ]
+  }
+  
