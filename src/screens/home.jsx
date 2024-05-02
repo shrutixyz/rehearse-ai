@@ -3,6 +3,7 @@ import axios from "axios";
 import "../css/home.css";
 import Navbar from "../components/Navbar";
 import aiimage from "../assets/Union.svg";
+import GradientText from "../components/GradientText";
 
 const Home = () => {
   function callGeminiAPI() {
@@ -28,20 +29,20 @@ const Home = () => {
         <div></div>
 
         <div className="trait-parent">
-          <p>ENTER JOB INFORMATION</p>
+          <GradientText text="ENTER JOB INFORMATION"/>
           <div className="row-inputs">
             <div>
-              <p>Job Role</p>
+              <p className="one-text">Job Role</p>
               <input type="text" className="input-small" />
             </div>
             <div>
-              <p>{"Required YOE (Years of Experience)"}</p>
+              <p className="one-text">{"Required YOE (Years of Experience)"}</p>
               <input type="text" className="input-small" />
             </div>
           </div>
 
           <div>
-            <p>{"Anything else? (Optional)"}</p>
+            <p className="one-text">{"Anything else? (Optional)"}</p>
             <textarea
               name=""
               id=""
@@ -51,8 +52,8 @@ const Home = () => {
             ></textarea>
           </div>
         </div>
-        <button onClick={() => setUserStoryIndex(userStoryIndex + 1)}>
-          <p>Next</p>
+        <button className="interview-button" onClick={() => setUserStoryIndex(userStoryIndex + 1)}>
+          <p className="button-text">Next</p>
         </button>
       </div>
     );
@@ -64,24 +65,38 @@ const Home = () => {
         <div></div>
 
         <div className="trait-parent">
-          <div>
-            <p>xyz</p>
-            <input type="range" min="1" max="100" value="50" class="slider" id="myRange"/>
-            <p>description</p>
+          <GradientText text="Toggle Interviewer's Traits"/>
+          <br /><br />
+         <div className="slider-row">
+         <div className="single-slider">
+            <p className="trait-name">Friendliness Level</p>
+            <input className="slider" type="range" min="1" max="100"  class="slider" id="myRange"/>
+            <p className="trait-desc">The degree to which the interviewer's tone and demeanor are friendly and welcoming.</p>
           </div>
-          <div>
-            <p>xyz</p>
-            <input type="range" min="1" max="100" value="50" class="slider" id="myRange"/>
-            <p>description</p>
+          <div className="single-slider" >
+            <p className="trait-name">Technical Proficiency</p>
+            <input className="slider" type="range" min="1" max="100"  class="slider" id="myRange"/>
+            <p className="trait-desc">The level of technical knowledge and expertise possessed by the interviewer. Options may include:</p>
           </div>
-          <div>
-            <p>xyz</p>
-            <input type="range" min="1" max="100" value="50" class="slider" id="myRange"/>
-            <p>description</p>
+         </div>
+
+         <div className="slider-row">
+         <div className="single-slider">
+            <p className="trait-name">Professionalism Rating</p>
+            <input className="slider" type="range" min="1" max="100"  class="slider" id="myRange"/>
+            <p className="trait-desc">The extent to which the interviewer adheres to professional standards and conducts the interview in a formal manner.</p>
           </div>
+          <div className="single-slider">
+            <p className="trait-name">Empathy Level</p>
+            <input className="slider" type="range" min="1" max="100"  class="slider" id="myRange"/>
+            <p className="trait-desc">The degree to which the interviewer demonstrates understanding and compassion towards the interviewee's experiences and challenges. Options may include:</p>
+          </div>
+         </div>
+
+
         </div>
-        <button onClick={() => setUserStoryIndex(userStoryIndex + 1)}>
-          <p>Start Interview</p>
+        <button className="interview-button"  onClick={() => setUserStoryIndex(userStoryIndex + 1)}>
+          <p className="button-text">Start Interview</p>
         </button>
       </div>
     );
@@ -89,26 +104,47 @@ const Home = () => {
 
   const InterviewSpace = () => {
     return (
-      <div>
-        <h1>InterviewSpace</h1>
-        <button onClick={() => setUserStoryIndex(3)}>
-          <p>Next</p>
-        </button>
+      <div className="userStoryParent">
+        <div></div>
+
+        <div className="feedback-parent">
+          <GradientText text="AI Interview - Your Interviewer is Amanda"/>
+          <div className="actual-chat">
+
+          </div>
+        </div>
+        <div>
+          <input className="chat-input" type="text" placeholder="Enter text here or hold mic to speak"/>
+        </div>
       </div>
     );
   };
+
+  const DownloadButton = (textOutput) => {
+    const file = new Blob([textOutput], {type: 'text/plain'});
+
+    return (
+            <button className="interview-button" variant="outlined">
+                <a download="sample.txt" target="_blank" rel="noreferrer" href={URL.createObjectURL(file)} style={{
+                    textDecoration: "inherit",
+                    color: "inherit",
+                }}>  <p className="button-text">Save Feedback</p></a>
+            </button>
+    )
+}
+
   const FeedbackSpace = () => {
     return (
       <div className="userStoryParent">
         <div></div>
 
-        <div className="trait-parent">
-          <p>Feedback</p>
-          <p>heheheh</p>
+        <div className="feedback-parent">
+          <GradientText text="Interview Feedback"/>
+          <div className="actual feedback">
+            <p className="feedback-text">feedback is something feedback beenx cdxjsx cdks feedback is something feedback beenx cdxjsx cdks feedback is something feedback beenx cdxjsx cdks feedback is something feedback beenx cdxjsx cdks feedback is something feedback beenx cdxjsx cdks </p>
+          </div>
         </div>
-        <button onClick={() => console.log("download smth")}>
-          <p>Save Feedback</p>
-        </button>
+        <DownloadButton/>
       </div>
     );
   };

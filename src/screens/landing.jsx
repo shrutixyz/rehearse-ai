@@ -15,8 +15,8 @@ const Landing = () => {
         <h1>Rehearse AI</h1>
         <p className='subtitle'>practice your interviews, powered by Artificial Intelligence.</p>
         <div className="buttons-container">
-          <button ><p className='button-text' onClick={()=>navigate('/home')}>Try Now!</p></button>
-          <button ><p className='button-text' onClick={()=>navigate('//github.com/shrutixyz/rehearse-ai')}>Learn more</p></button>
+          <button className='home-button'><p className='button-text' onClick={()=>navigate('/home')}>Try Now!</p></button>
+          <button className='home-button'><p className='button-text' onClick={()=>navigate('//github.com/shrutixyz/rehearse-ai')}>Learn more</p></button>
         </div>
       </div>
       <div className='right'>

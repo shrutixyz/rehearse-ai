@@ -12,7 +12,6 @@
 
 .trait-parent{
     width: 80vw;
-    background-color: black;
 }
 
 .userStoryParent{
@@ -32,8 +31,76 @@
 
 .input-small{
     width: 35vw;
+    background-color: transparent;
+    border: 1px solid white;
+    height: 3rem;
 }
 
 .input-large{
     width: 80vw;
+    background-color: transparent;
+    border: 1px solid white;
 }
+
+.one-text{
+    font-size: 1.4rem;
+}
+
+.interview-button{
+    width: 40rem;
+}
+
+.trait-desc{
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1.1rem;
+    opacity: 0.7;
+}
+
+.trait-name{
+    font-size: 1.3rem;
+    /* opacity: 0.8; */
+}
+
+.slider{
+    width: 35vw;
+}
+
+.slider-row{
+    display: flex;
+    width: 80vw;
+    justify-content: space-between;
+}
+
+.single-slider{
+    width: 35vw;
+}
+
+.feedback-parent{
+    width: 80vw;
+    height: 80vh;
+}
+
+.feedback-text{
+    font-size: 1.3rem;
+}
+
+.actual-chat{
+    width: 80vw;
+    height: 70vh;
+}
+
+.chat-input{
+    /* border: 2px solid #FF9999; */
+    border-image-source: linear-gradient(to right, #AC40DF, #FF9999);
+    border-width: 2px;
+    border-image-slice: 1;
+    background-color: transparent;
+    width: 60vw;
+    height: 3rem;
+    font-size: 1.2rem;
+    padding-left: 2.5rem;
+    color: white;
+    /* border-radius: 4rem; */
+}
+
