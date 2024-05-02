@@ -89,7 +89,7 @@
 .actual-chat{
     width: 80vw;
     height: 70vh;
-    overflow: scroll;
+    overflow-y: scroll;
 }
 
 .chat-input{
