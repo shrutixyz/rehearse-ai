@@ -12,3 +12,13 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+input{
+  color: white;
+  font-size: 1.2rem;
+}
+
+textarea{
+  color: white;
+  font-size: 1.2rem;
+}

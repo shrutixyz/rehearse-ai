@@ -4,8 +4,28 @@ import "../css/home.css";
 import Navbar from "../components/Navbar";
 import aiimage from "../assets/Union.svg";
 import GradientText from "../components/GradientText";
+import mic from "../assets/mic.svg"
+import speaker from "../assets/volume.svg"
 
 const Home = () => {
+  
+  const [yoe, setyoe] = useState(null)
+  const [additional, setadditional] = useState(null)
+  const [userjson, setuserjson] = useState({})
+  const [friendliness, setFriendliness] = useState(0);
+  const [technical, setTechnical] = useState(0);
+  const [Professionalism, setProfessionalism] = useState(0);
+  const [empathy, setEmpathy] = useState(0)
+  const [jobrole, setjobrole] = useState("")
+
+  var userJson  = {
+    "jobrole": "",
+    "yoe": 0,
+    "interviewer-friendliness": "high",
+    "interviewer-technical-aptitude": "medium",
+    "interviewer-empathy": "medium",
+    "interviewer-professionalism": "low"
+  }
   function callGeminiAPI() {
     axios
       .post(
@@ -24,6 +44,7 @@ const Home = () => {
   }
 
   const TraitSelector = () => {
+    
     return (
       <div className="userStoryParent">
         <div></div>
@@ -33,11 +54,11 @@ const Home = () => {
           <div className="row-inputs">
             <div>
               <p className="one-text">Job Role</p>
-              <input type="text" className="input-small" />
+              <input type="text" key="jobrole" className="input-small" onChange={val=>setjobrole(val.target.value)} value={jobrole}/>
             </div>
             <div>
               <p className="one-text">{"Required YOE (Years of Experience)"}</p>
-              <input type="text" className="input-small" />
+              <input type="number" className="input-small"  onChange={val=>setyoe(val.target.value)} value={yoe}/>
             </div>
           </div>
 
@@ -52,7 +73,14 @@ const Home = () => {
             ></textarea>
           </div>
         </div>
-        <button className="interview-button" onClick={() => setUserStoryIndex(userStoryIndex + 1)}>
+        <button className="interview-button" onClick={() => {
+          if(yoe!=null && yoe>-1 && jobrole.length>0){
+            setUserStoryIndex(userStoryIndex + 1)
+          }
+          else{
+            alert("Please fill the information correctly!")
+          }
+        }}>
           <p className="button-text">Next</p>
         </button>
       </div>
@@ -70,7 +98,7 @@ const Home = () => {
          <div className="slider-row">
          <div className="single-slider">
             <p className="trait-name">Friendliness Level</p>
-            <input className="slider" type="range" min="1" max="100"  class="slider" id="myRange"/>
+            <input key="friendliness" className="slider" type="range" min="1" max="100" value={friendliness} onChange={e=>setFriendliness(e.target.value)} class="slider" id="myRange"/>
             <p className="trait-desc">The degree to which the interviewer's tone and demeanor are friendly and welcoming.</p>
           </div>
           <div className="single-slider" >
@@ -113,8 +141,10 @@ const Home = () => {
 
           </div>
         </div>
-        <div>
+        <div className="chat-input-row">
           <input className="chat-input" type="text" placeholder="Enter text here or hold mic to speak"/>
+          <img src={mic} alt="" />
+          <img src={speaker} alt="" />
         </div>
       </div>
     );
