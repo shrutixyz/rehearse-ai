@@ -57,7 +57,7 @@ const Home = () => {
     setuserjson(userJson);
     setChats([
       {
-        sender: "interviewer",
+        sender: names[randomNumber],
         content: "Hi there, would you like to introduce yourself please?",
       },
     ]);
