@@ -110,3 +110,36 @@
     justify-content: space-between;
 }
 
+
+.logo-in-chat{
+    height: 1.5rem;
+}
+
+.circle{
+    height: 3rem;
+    width: 3rem;
+    background-color: transparent;
+    border-radius: 5rem;
+    border: 2px solid rgb(255, 253, 244);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.single-chat{
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+.single-chat-text{
+    font-size: 1.2rem;
+}
+
+.interviewer-name{
+    font-size: 1.1rem;
+    margin-bottom: -1rem;
+    font-weight: bold;
+}
