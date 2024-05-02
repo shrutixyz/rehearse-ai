@@ -1,0 +1,78 @@
+main 
+{
+    background-color: #181928;
+    background-image: url('../assets/bg.svg');
+    background-repeat: no-repeat;
+    background-size: 60%;
+    background-position: bottom left;
+    max-height: 100vh;
+    display: flex;
+}
+
+.main-container 
+{
+    display: flex;
+    margin: auto auto;
+    width: 80%;
+    min-width: 960px;
+    justify-content: space-between;
+    align-items: center;
+}
+
+h1 
+{
+    font-size: 5rem;
+    background: linear-gradient(#AC40DF, #FF9999);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0;
+}
+
+p 
+{
+    font-size: 2rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+button 
+{
+    padding: 20px 60px;
+    border: none;
+    outline: none;
+    position: relative;
+    border-radius: 5px;
+    background: linear-gradient(to right, #AC40DF, #FF9999);
+    cursor: pointer;
+    color: white;
+    margin-right: 2rem;
+}
+
+button::before 
+{
+    content: "";
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    bottom: 2px;
+    left: 2px;
+    background-color: #181928;
+}
+
+button::after
+{
+    content: attr(data);
+    background: linear-gradient(#AC40DF, #FF9999);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    position: absolute;
+    top: 10px;
+    right: 2px;
+    bottom: 10px;
+    left: 2px;
+    font-size: 16px;
+}
+
+button:hover
+{
+    opacity: 0.7;
+}
