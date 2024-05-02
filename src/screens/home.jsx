@@ -6,6 +6,8 @@ import aiimage from "../assets/Union.svg";
 import GradientText from "../components/GradientText";
 import mic from "../assets/mic.svg";
 import speaker from "../assets/volume.svg";
+import speakerOnImage from "../assets/volume.svg";
+import speakerOffImage from "../assets/volume-x.svg";
 import names from "../data/names";
 import logo from "../assets/logo.svg";
 
@@ -20,8 +22,10 @@ const Home = () => {
   const [jobrole, setjobrole] = useState("");
   const [extras, setExtras] = useState("");
   const [chats, setChats] = useState(["hehe"]);
+  const [speakerOn, setSpeakerOn] = useState(true);
+  const [micOn, setMicOn] = useState(false);
 
-  const [text, setText] = useState('');
+  const [text, setText] = useState("");
   const synth = window.speechSynthesis;
 
   var userJson = {
@@ -55,8 +59,8 @@ const Home = () => {
         content: "Hi there, would you like to introduce yourself please?",
       },
     ]);
-    setText("Hi there, would you like to introduce yourself please?")
-    speak("Hi there, would you like to introduce yourself please?")
+    setText("Hi there, would you like to introduce yourself please?");
+    speak("Hi there, would you like to introduce yourself please?");
   }
   function callGeminiAPI() {
     axios
@@ -227,7 +231,7 @@ const Home = () => {
 
   const speak = (textToSpeak) => {
     const utterance = new SpeechSynthesisUtterance(textToSpeak);
-      synth.speak(utterance);
+    synth.speak(utterance);
     // if (synth && text) {
     //   const utterance = new SpeechSynthesisUtterance(text);
     //   synth.speak(utterance);
@@ -266,7 +270,19 @@ const Home = () => {
             placeholder="Enter text here or hold mic to speak"
           />
           <img src={mic} alt="" />
-          <img src={speaker} alt="" />
+          {speakerOn ? (
+            <img
+              onClick={() => setSpeakerOn(!speakerOn)}
+              src={speakerOnImage}
+              alt=""
+            />
+          ) : (
+            <img
+              onClick={() => setSpeakerOn(!speakerOn)}
+              src={speakerOffImage}
+              alt=""
+            />
+          )}
         </div>
       </div>
     );
