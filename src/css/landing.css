@@ -1,10 +1,11 @@
 main 
 {
     background-color: #181928;
-    background-image: url('../assets/bg.svg');
+    /* background-image: url('../assets/bg.svg'); */
     background-repeat: no-repeat;
     background-size: 60%;
     background-position: bottom left;
+    height: 100vh;
     max-height: 100vh;
     display: flex;
 }
@@ -41,38 +42,47 @@ button
     outline: none;
     position: relative;
     border-radius: 5px;
-    background: linear-gradient(to right, #AC40DF, #FF9999);
+    background: linear-gradient(#181928, #181928) padding-box,
+    linear-gradient(to right, #AC40DF, #FF9999) border-box;
     cursor: pointer;
     color: white;
     margin-right: 2rem;
+    width: 20rem;
+    height: 4rem;
+    border-radius: 0.5rem;
+
+color: white;
+border: 2px solid transparent;
+display: inline-block;
 }
 
-button::before 
-{
-    content: "";
-    position: absolute;
-    top: 2px;
-    right: 2px;
-    bottom: 2px;
-    left: 2px;
-    background-color: #181928;
-}
-
-button::after
-{
-    content: attr(data);
-    background: linear-gradient(#AC40DF, #FF9999);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    position: absolute;
-    top: 10px;
-    right: 2px;
-    bottom: 10px;
-    left: 2px;
-    font-size: 16px;
-}
 
 button:hover
 {
     opacity: 0.7;
+}
+
+.subtitle{
+    opacity: 0.7;
+    font-weight: 400;
+    letter-spacing: 0.1rem;
+}
+
+.button-text{
+    background: linear-gradient(#AC40DF, #FF9999);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-top: -0.2rem;
+    font-size: 1.5rem;
+}
+
+.left{
+    z-index: 2;
+}
+.aiimage{
+    position: fixed;
+    z-index: 1;
+    left: -3rem;
+    bottom: -3rem;
+    height: 60rem;
 }
