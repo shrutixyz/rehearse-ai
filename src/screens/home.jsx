@@ -10,6 +10,7 @@ import speakerOnImage from "../assets/volume.svg";
 import speakerOffImage from "../assets/volume-x.svg";
 import names from "../data/names";
 import logo from "../assets/logo.svg";
+import send from '../assets/send.svg';
 
 const Home = () => {
   const [yoe, setyoe] = useState(null);
@@ -26,6 +27,7 @@ const Home = () => {
   const [micOn, setMicOn] = useState(false);
 
   const [text, setText] = useState("");
+  const [response, setResponse] = useState("");
   const synth = window.speechSynthesis;
 
   var userJson = {
@@ -62,22 +64,61 @@ const Home = () => {
     setText("Hi there, would you like to introduce yourself please?");
     speak("Hi there, would you like to introduce yourself please?");
   }
-  function callGeminiAPI() {
+
+  function sendChat()
+  {
+    setResponse(document.getElementById("chat-input").value);
+    const tempChats = [{
+        sender: 'interviewee',
+        content: document.getElementById("chat-input").value
+    }]
+    setChats(prevChats => ([...prevChats, ...tempChats]));
+
+    console.log(tempChats, "temp chats");
+    setResponse("");
+    document.getElementById("chat-input").value = "";
+    continueConversation();
+  }
+
+  function createScene()
+  {
+    return `Consider yourself as a hiring manager and ask me questions for ${jobrole} and ${yoe} years of experience, and I’m going to provide an answer.`
+  }
+
+  function continueConversation()
+  {
+    const scene = createScene();
+    const prompt = scene + "This is the conversation json of previous replies, reply with a single question relevant to the jobrole and years of experience and do not add interviewee's response in a simple text format" + JSON.stringify(chats);
+    callGeminiAPI(prompt);
+  }
+
+  function callGeminiAPI(prompt) {
     axios
       .post(
         `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${process.env.REACT_APP_GEMINI_API_KEY}`,
         {
           contents: [
             {
-              parts: [{ text: "Give me python code to sort a list." }],
+              parts: [{ text: prompt }],
             },
           ],
         }
       )
       .then(function (response) {
-        console.log(response.data);
+        const newresponse = response.data.candidates[0].content.parts[0].text;
+        const tempChats = [{
+            sender: user["interviewer-name"],
+            content: newresponse
+        }]
+        setChats(prevChats => ([...prevChats, ...tempChats]));
+        console.log(response.data.candidates[0].content.parts[0].text);
       });
+
   }
+
+  useEffect(()=>{
+    console.log(chats, "hehe");
+  },[chats])
 
   const RoleSelector = () => {
     return (
@@ -256,7 +297,7 @@ const Home = () => {
                   <img src={logo} className="logo-in-chat" alt="" />
                 </div>
                 <div>
-                  <p className="interviewer-name">{user["interviewer-name"]}</p>
+                  <p className="interviewer-name">{chat["sender"]}</p>
                   <p className="single-chat-text">{chat["content"]}</p>
                 </div>
               </div>
@@ -266,18 +307,25 @@ const Home = () => {
         <div className="chat-input-row">
           <input
             className="chat-input"
+            id="chat-input"
             type="text"
             placeholder="Enter text here or hold mic to speak"
+            
           />
-          <img src={mic} alt="" />
+          <img 
+            onClick={e => sendChat()}
+            className="img-button" src={send} alt="" />
+          <img className="img-button" src={mic} alt="" />
           {speakerOn ? (
             <img
+              className="img-button"
               onClick={() => setSpeakerOn(!speakerOn)}
               src={speakerOnImage}
               alt=""
             />
           ) : (
             <img
+              className="img-button"
               onClick={() => setSpeakerOn(!speakerOn)}
               src={speakerOffImage}
               alt=""

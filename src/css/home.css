@@ -8,6 +8,7 @@
     z-index: 0;
     right: 1rem;
     bottom: 1rem;
+    display: none;
 }
 
 .trait-parent{
@@ -88,6 +89,7 @@
 .actual-chat{
     width: 80vw;
     height: 70vh;
+    overflow: scroll;
 }
 
 .chat-input{
@@ -142,4 +144,10 @@
     font-size: 1.1rem;
     margin-bottom: -1rem;
     font-weight: bold;
+}
+
+.img-button:hover
+{
+    opacity: 0.6;
+    pointer-events: all; 
 }
