@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import "../css/home.css";
 import Navbar from "../components/Navbar";
 import aiimage from "../assets/Union.svg";
+import intervieweeimage from "../assets/you.svg";
 import GradientText from "../components/GradientText";
 import mic from "../assets/mic.svg";
 import speaker from "../assets/volume.svg";
@@ -10,7 +11,8 @@ import speakerOnImage from "../assets/volume.svg";
 import speakerOffImage from "../assets/volume-x.svg";
 import names from "../data/names";
 import logo from "../assets/logo.svg";
-import send from '../assets/send.svg';
+import send from "../assets/send.svg";
+import ScrollToBottom from "react-scroll-to-bottom";
 
 const Home = () => {
   const [yoe, setyoe] = useState(null);
@@ -25,10 +27,26 @@ const Home = () => {
   const [chats, setChats] = useState(["hehe"]);
   const [speakerOn, setSpeakerOn] = useState(true);
   const [micOn, setMicOn] = useState(false);
+  const [chatIndex, setChatIndex] = useState(0);
+  const [feedback, setFeedback] = useState("");
 
   const [text, setText] = useState("");
   const [response, setResponse] = useState("");
   const synth = window.speechSynthesis;
+  const divRef = useRef(null);
+
+  // Function to scroll to bottom
+  const scrollToBottom = () => {
+    if (divRef.current) {
+      divRef.current.scrollTop = divRef.current.scrollHeight;
+    }
+  };
+
+  // Scroll to bottom on mount and whenever children change
+  useEffect(() => {
+    scrollToBottom();
+  }, [chats]);
+
 
   var userJson = {
     jobrole: "",
@@ -65,14 +83,15 @@ const Home = () => {
     speak("Hi there, would you like to introduce yourself please?");
   }
 
-  function sendChat()
-  {
+  function sendChat() {
     setResponse(document.getElementById("chat-input").value);
-    const tempChats = [{
-        sender: 'interviewee',
-        content: document.getElementById("chat-input").value
-    }]
-    setChats(prevChats => ([...prevChats, ...tempChats]));
+    const tempChats = [
+      {
+        sender: "You",
+        content: document.getElementById("chat-input").value,
+      },
+    ];
+    setChats((prevChats) => [...prevChats, ...tempChats]);
 
     console.log(tempChats, "temp chats");
     setResponse("");
@@ -80,16 +99,67 @@ const Home = () => {
     continueConversation();
   }
 
-  function createScene()
-  {
-    return `Consider yourself as a hiring manager and ask me questions for ${jobrole} and ${yoe} years of experience, and I’m going to provide an answer.`
+  function concludeConversation() {
+    console.log("concluding conversation called");
+    const scene = createScene();
+    const prompt =
+      scene +
+      "This is the conversation json of previous replies, reply with a single concluding statement and end the interview, relevant to the jobrole and years of experience and do not add interviewee's response in a simple text format" +
+      JSON.stringify(chats);
+    callGeminiAPI(prompt);
   }
 
-  function continueConversation()
-  {
+  function getFeedback(prompt) {
+    axios
+      .post(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${process.env.REACT_APP_GEMINI_API_KEY}`,
+        {
+          contents: [
+            {
+              parts: [{ text: prompt }],
+            },
+          ],
+        }
+      )
+      .then(function (response) {
+        setFeedback(response.data.candidates[0].content.parts[0].text);
+        setUserStoryIndex(userStoryIndex + 1);
+      });
+  }
+
+  function endConversation() {
+    console.log("concluding conversation called");
     const scene = createScene();
-    const prompt = scene + "This is the conversation json of previous replies, reply with a single question relevant to the jobrole and years of experience and do not add interviewee's response in a simple text format" + JSON.stringify(chats);
-    callGeminiAPI(prompt);
+    const prompt =
+      scene +
+      "This is the conversation json of previous replies, generate a feedback for the candidate's interview in plain text, without any formatting: " +
+      JSON.stringify(chats);
+    getFeedback(prompt);
+  }
+
+  function createScene() {
+    return `Consider yourself as a hiring manager/interviewer and ask me questions for ${JSON.stringify(user)}, and I'm going to provide an answer.`;
+  }
+
+  function continueConversation() {
+    setChatIndex(chatIndex + 1);
+    console.log("Chat index is ", chatIndex);
+    if (chatIndex < 4) {
+      const scene = createScene();
+      const prompt =
+        scene +
+        "This is the conversation json of previous replies, reply with a single question relevant to the jobrole and years of experience and do not add interviewee's response in a simple text format" +
+        JSON.stringify(chats);
+      callGeminiAPI(prompt);
+    }
+    if (chatIndex == 4) {
+      concludeConversation();
+    }
+    if (chatIndex == 5) {
+      endConversation();
+    }
+    if (chatIndex == 6) {
+    }
   }
 
   function callGeminiAPI(prompt) {
@@ -106,19 +176,24 @@ const Home = () => {
       )
       .then(function (response) {
         const newresponse = response.data.candidates[0].content.parts[0].text;
-        const tempChats = [{
+        const tempChats = [
+          {
             sender: user["interviewer-name"],
-            content: newresponse
-        }]
-        setChats(prevChats => ([...prevChats, ...tempChats]));
+            content: newresponse,
+          },
+        ];
+        setChats((prevChats) => [...prevChats, ...tempChats]);
         console.log(response.data.candidates[0].content.parts[0].text);
+        if (speakerOn) {
+          const utterance = new SpeechSynthesisUtterance(newresponse);
+          synth.speak(utterance);
+        }
       });
-
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     console.log(chats, "hehe");
-  },[chats])
+  }, [chats]);
 
   const RoleSelector = () => {
     return (
@@ -218,7 +293,7 @@ const Home = () => {
               />
               <p className="trait-desc">
                 The level of technical knowledge and expertise possessed by the
-                interviewer. Options may include:
+                interviewer.
               </p>
             </div>
           </div>
@@ -252,7 +327,7 @@ const Home = () => {
               <p className="trait-desc">
                 The degree to which the interviewer demonstrates understanding
                 and compassion towards the interviewee's experiences and
-                challenges. Options may include:
+                challenges.
               </p>
             </div>
           </div>
@@ -271,8 +346,10 @@ const Home = () => {
   };
 
   const speak = (textToSpeak) => {
-    const utterance = new SpeechSynthesisUtterance(textToSpeak);
-    synth.speak(utterance);
+    if (speakerOn) {
+      const utterance = new SpeechSynthesisUtterance(textToSpeak);
+      synth.speak(utterance);
+    }
     // if (synth && text) {
     //   const utterance = new SpeechSynthesisUtterance(text);
     //   synth.speak(utterance);
@@ -290,11 +367,20 @@ const Home = () => {
               "AI Interview - Your Interviewer is " + user["interviewer-name"]
             }
           />
-          <div className="actual-chat">
+          
+          <div className="actual-chat" ref={divRef}>
             {chats.map((chat) => (
               <div className="single-chat">
                 <div className="circle">
-                  <img src={logo} className="logo-in-chat" alt="" />
+                  {chat["sender"] == "You" ? (
+                    <img
+                      src={intervieweeimage}
+                      className="logo-in-chat"
+                      alt=""
+                    />
+                  ) : (
+                    <img src={logo} className="logo-in-chat" alt="" />
+                  )}
                 </div>
                 <div>
                   <p className="interviewer-name">{chat["sender"]}</p>
@@ -303,19 +389,22 @@ const Home = () => {
               </div>
             ))}
           </div>
+          
         </div>
         <div className="chat-input-row">
           <input
             className="chat-input"
             id="chat-input"
             type="text"
-            placeholder="Enter text here or hold mic to speak"
-            
+            placeholder="Enter text here.."
           />
-          <img 
-            onClick={e => sendChat()}
-            className="img-button" src={send} alt="" />
-          <img className="img-button" src={mic} alt="" />
+          <img
+            onClick={(e) => sendChat()}
+            className="img-button"
+            src={send}
+            alt=""
+          />
+          {/* <img className="img-button" src={mic} alt="" /> */}
           {speakerOn ? (
             <img
               className="img-button"
@@ -336,13 +425,13 @@ const Home = () => {
     );
   };
 
-  const DownloadButton = (textOutput) => {
-    const file = new Blob([textOutput], { type: "text/plain" });
-
+  const DownloadButton = () => {
+    const file = new Blob([feedback], { type: "text/plain" });
+    const filename = "feedback " + Date.now().toString() + ".txt";
     return (
       <button className="interview-button" variant="outlined">
         <a
-          download="sample.txt"
+          download={filename}
           target="_blank"
           rel="noreferrer"
           href={URL.createObjectURL(file)}
@@ -359,6 +448,9 @@ const Home = () => {
   };
 
   const FeedbackSpace = () => {
+    var newfeedback = feedback.replace("**", "<br>")
+    newfeedback = newfeedback.replace("*", "  ")
+    setFeedback(newfeedback)
     return (
       <div className="userStoryParent">
         <div></div>
@@ -366,12 +458,7 @@ const Home = () => {
         <div className="feedback-parent">
           <GradientText text="Interview Feedback" />
           <div className="actual feedback">
-            <p className="feedback-text">
-              feedback is something feedback beenx cdxjsx cdks feedback is
-              something feedback beenx cdxjsx cdks feedback is something
-              feedback beenx cdxjsx cdks feedback is something feedback beenx
-              cdxjsx cdks feedback is something feedback beenx cdxjsx cdks{" "}
-            </p>
+            <p className="feedback-text">{feedback}</p>
           </div>
         </div>
         <DownloadButton />
